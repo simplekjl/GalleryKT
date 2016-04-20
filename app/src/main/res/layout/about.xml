@@ -1,27 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/activity_vertical_margin"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:layout_marginBottom="@dimen/activity_vertical_margin">
 
     <TextView
         android:id="@+id/author"
         android:text="Developer: Jose Luis Crisostomo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"/>
     <TextView
         android:id="@+id/title"
         android:layout_below="@id/author"
         android:text="Project GalleryKT"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_vertical_margin" />
     <TextView
-        android:id="@+id/link"
+        android:id="@+id/github"
         android:layout_below="@id/title"
         android:text="Github link:"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_vertical_margin" />
     <TextView
+        android:id="@+id/link"
+        android:layout_below="@id/github"
+        android:text="https://github.com/simplekjl/GalleryKT"
+        android:textStyle="italic"
+        android:textColorLink="@color/cardview_dark_background"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_vertical_margin" />
 
 </RelativeLayout>

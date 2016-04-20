@@ -1,12 +1,17 @@
 package dreamers.dev.gallerykt;
 
+import android.Manifest;
 import android.app.SearchManager;
 import android.app.usage.NetworkStatsManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Parcelable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +42,9 @@ import retrofit2.Response;
  * Other Libraries used are RecyclerView and CardView
  * http://frogermcs.github.io/instamaterial-recyclerview-animations-done-right/
  * http://sapandiwakar.in/pull-to-refresh-for-android-recyclerview-or-any-other-vertically-scrolling-view/
+ * http://developer.android.com/intl/es/training/permissions/requesting.html
+ * icon
+ * https://www.iconfinder.com/icons/728946/file_format_gallery_image_photo_photography_picture_icon#size=256
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -48,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     //variables to check the network
     private ConnectivityManager connManager;
     private NetworkInfo activeNetwork;
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS =24601;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         activeNetwork = connManager.getActiveNetworkInfo();
 
         if(activeNetwork != null){
+            askPermission();
             callServer();
         }
 
@@ -98,6 +108,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void askPermission(){
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_CONTACTS)) {
+
+                // Show an expanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_CONTACTS},
+                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+    }
+
     private void callServer() {
         mSwipeRefreshLayout.setRefreshing(true);
         Call<List<Photo>> response = RetrofitSingleton.apiService.getPhotos();
@@ -119,6 +158,30 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
     // saving the state of the activity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -157,11 +220,17 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             AlertDialog alert = new AlertDialog.Builder(this)
-                    .setIcon(R.drawable.gallery_icon).setView(R.layout.about).setPositiveButton(12,null).create();
+                    .setIcon(R.drawable.gallery_icon).setView(R.layout.about).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).create();
             alert.show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 }
