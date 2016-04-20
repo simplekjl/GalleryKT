@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 if(activeNetwork != null){
                     updateView();
                 }else{
-                    Toast.makeText(getApplicationContext(),"Turn on first a network connection to get the information from the server",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.error_network_msg,Toast.LENGTH_LONG).show();
                 }
             }
         });
